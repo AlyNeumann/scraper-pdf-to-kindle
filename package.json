@@ -1,0 +1,22 @@
+{
+  "name": "maysam-aly-app",
+  "version": "1.0.0",
+  "description": "url to kindle",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "author": "aly neumann",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "handlebars": "^4.7.7",
+    "nodemailer": "^6.6.3",
+    "nodemon": "^2.0.12",
+    "puppeteer": "^10.2.0",
+    "util": "^0.12.4",
+    "uuid": "^3.4.0",
+    "website-scraper": "^4.2.3",
+    "website-scraper-phantom": "^1.0.0"
+  }
+}
