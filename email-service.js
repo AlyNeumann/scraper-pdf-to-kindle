@@ -8,8 +8,8 @@ module.exports.sendToKindle = async (title) => {
     // secure: true,
     service: "hotmail",
     auth: {
-      user: "aly_neum@hotmail.com",
-      pass: "MyOldTH7711!",
+      user: process.env.EMAIL,
+      pass: process.env.PASSWORD,
     },
     // tls: {
     //     rejectUnauthorized: false
