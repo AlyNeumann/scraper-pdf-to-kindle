@@ -26,6 +26,7 @@ RUN npm install nodemailer
 RUN npm install util
 RUN npm install handlebars
 RUN npm install uuid
+RUN npm install dotenv
 
 USER pptruser
 

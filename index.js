@@ -8,6 +8,7 @@ app.use(express.json());
 app.use(express.text());
 
 app.listen(port);
+require('dotenv').config();
 
 app.post('/', async function (req, res, next) {
     try {
