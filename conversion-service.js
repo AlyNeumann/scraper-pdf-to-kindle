@@ -17,7 +17,7 @@ module.exports.createPdfFromUrl = async (url, email) => {
         if (err) return console.log(err);
     });
     await generatePdf(result.title, fileId);
-    return `your file ${result.domain} - ${result.title} has been send to ${email}`;
+    return `your file ${result.domain} - ${result.title} has been sent to ${email}`;
 }
 
 const getHtml = async (fileId) => {
@@ -44,7 +44,7 @@ const generatePdf = async (title, fileId) => {
         await page.setContent(html);
         await page.pdf({ path: `./${title}.pdf`, format: 'A4' });
         await browser.close();
-        console.log("PDF Generated")
+        console.log("PDF generated")
         await emailService.sendToKindle(title);
         return removeFiles(title, fileId);
     }).catch(err => {
@@ -54,7 +54,6 @@ const generatePdf = async (title, fileId) => {
 
 const parseHtml = async (url) => {
     return await mercury.parse(url).then(result => {
-        console.log(result)
         return result;
     });
 }
@@ -71,8 +70,8 @@ const removeFiles = (title, fileId) => {
     filePaths.map(filePath => {
         fs.unlink(filePath, (err) => {
             if (err) {
-                console.error(err)
-                return
+                console.error(err);
+                return console.log("files removed");
             }
         })
     })

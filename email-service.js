@@ -11,9 +11,9 @@ module.exports.sendToKindle = async (title) => {
       user: process.env.EMAIL,
       pass: process.env.PASSWORD,
     },
-    // tls: {
-    //     rejectUnauthorized: false
-    //   }
+    tls: {
+        rejectUnauthorized: false
+      }
   });
 
   let info = await transporter.sendMail({

@@ -32,4 +32,4 @@ USER pptruser
 
 COPY . .
 EXPOSE 3006
-CMD ["google-chrome-stable"]
+CMD ["npm", "start"]
