@@ -27,6 +27,7 @@ RUN npm install util
 RUN npm install handlebars
 RUN npm install uuid
 RUN npm install dotenv
+RUN npm install node-cron
 
 USER pptruser
 

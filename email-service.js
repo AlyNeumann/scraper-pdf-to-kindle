@@ -36,4 +36,5 @@ module.exports.sendToKindle = async (title) => {
     }
   });
   console.log(`email sent : ${JSON.stringify(info)}`)
+  return info.accepted;
 }

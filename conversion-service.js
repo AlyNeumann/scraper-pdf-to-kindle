@@ -46,7 +46,10 @@ const generatePdf = async (title, fileId) => {
         await page.pdf({ path: `./${title}.pdf`, format: 'A4' });
         await browser.close();
         console.log("PDF generated")
-        await emailService.sendToKindle(title);
+        let results = await emailService.sendToKindle(title);
+        if(!results){
+            console.log('email was not sent')
+        }
         return removeFiles(title, fileId);
     }).catch(err => {
         console.error(err)
