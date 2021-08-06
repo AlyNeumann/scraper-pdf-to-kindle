@@ -8,6 +8,7 @@ const emailService = require('./email-service');
 const mercury = require('@postlight/mercury-parser');
 const { v4: uuidv4 } = require('uuid');
 
+
 module.exports.createPdfFromUrl = async (url, email) => {
     let result = await parseHtml(url);
 
