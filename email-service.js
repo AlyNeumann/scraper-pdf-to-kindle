@@ -1,6 +1,7 @@
 const nodemailer = require("nodemailer");
 
-module.exports.sendToKindle = async (title) => {
+module.exports.sendToKindle = async (title, email) => {
+  //TODO: could delcare this outside of method incase we need more than one email 
   let transporter = nodemailer.createTransport({
     // pool: true,
     // host: "smtp-mail.outlook.com",
@@ -18,7 +19,7 @@ module.exports.sendToKindle = async (title) => {
 
   let info = await transporter.sendMail({
     from: '"Another Fruit 🍍🥝" <aly_neum@hotmail.com>',
-    to: "neumannbooking@gmail.com, aly_neum@hotmail.com",
+    to: `neumannbooking@gmail.com, ${email}`,
     subject: "Hello, here is an EMAIL",
     text: "Text Body stuffffff",
     html: "<b>Do we need html? No...</b>",

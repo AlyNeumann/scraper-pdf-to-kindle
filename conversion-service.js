@@ -8,6 +8,9 @@ const emailService = require('./email-service');
 const mercury = require('@postlight/mercury-parser');
 const { v4: uuidv4 } = require('uuid');
 
+//TODO: implement add blocker, decide if in memory html is enough (less file cleanup / storage), get new email
+// What is the best order if we are using the add blocker? Could we use mercury after add blocker or is before still best?
+// I think before still makes sense - parse with mercury - reform html - mount html - remove adds - generate pdf
 
 module.exports.createPdfFromUrl = async (url, email) => {
     let result = await parseHtml(url);
@@ -17,7 +20,7 @@ module.exports.createPdfFromUrl = async (url, email) => {
     fs.writeFile(`./file-${fileId}.html`, html, function (err) {
         if (err) return console.log(err);
     });
-    await generatePdf(result.title, fileId);
+    await generatePdf(result.title, fileId, email);
     return `your file ${result.domain} - ${result.title} has been sent to ${email}`;
 }
 
@@ -32,7 +35,7 @@ const getHtml = async (fileId) => {
     }
 }
 
-const generatePdf = async (title, fileId) => {
+const generatePdf = async (title, fileId, email) => {
     let data = {};
     getHtml(fileId).then(async (res) => {
         console.log("compiling the template with handlebars");
@@ -46,7 +49,9 @@ const generatePdf = async (title, fileId) => {
         await page.pdf({ path: `./${title}.pdf`, format: 'A4' });
         await browser.close();
         console.log("PDF generated")
-        let results = await emailService.sendToKindle(title);
+
+        //TODO: move this to main function - right now it is not waiting for PDF if moved....
+        let results = await emailService.sendToKindle(title, email);
         if(!results){
             console.log('email was not sent')
         }
