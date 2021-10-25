@@ -2,6 +2,10 @@ FROM node:12-slim
 
 RUN apt-get -y update
 RUN apt-get -y install git
+#TODO: the user permission is what is not working here
+#which one of these will work? Test both.
+USER root
+RUN sudo su
 
 RUN apt-get update \
     && apt-get install -y wget gnupg \
@@ -12,7 +16,7 @@ RUN apt-get update \
       --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
-RUN npm i puppeteer \
+RUN npm i puppeteer puppeteer-extra \
     # Add user so we don't need --no-sandbox.
     # same layer as npm install to keep re-chowned files from using up several hundred MBs more space
     && groupadd -r pptruser && useradd -r -g pptruser -G audio,video pptruser \

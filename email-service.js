@@ -1,28 +1,19 @@
 const nodemailer = require("nodemailer");
+const nodemailerSendgrid = require("nodemailer-sendgrid");
 
 module.exports.sendToKindle = async (title, email) => {
-  //TODO: could delcare this outside of method incase we need more than one email 
-  let transporter = nodemailer.createTransport({
-    // pool: true,
-    // host: "smtp-mail.outlook.com",
-    // port: 465,
-    // secure: true,
-    service: "hotmail",
-    auth: {
-      user: process.env.EMAIL,
-      pass: process.env.PASSWORD,
-    },
-    tls: {
-        rejectUnauthorized: false
-      }
-  });
+  const transporter = nodemailer.createTransport(
+    nodemailerSendgrid({
+         apiKey: process.env.SENDGRID_API_KEY
+      })
+    );
 
   let info = await transporter.sendMail({
-    from: '"Another Fruit 🍍🥝" <aly_neum@hotmail.com>',
+    from: '"Another Fruit 🍍🥝" <no-reply@anotherfruit.com>',
     to: `neumannbooking@gmail.com, ${email}`,
-    subject: "Hello, here is an EMAIL",
-    text: "Text Body stuffffff",
-    html: "<b>Do we need html? No...</b>",
+    subject: "Hello from Another Fruit",
+    text: "Here is your PDF!",
+    html: "<b>Here is your PDF!</b>",
     attachments: [{
       filename: `${title}.pdf`,
       path: `./${title}.pdf`,
@@ -37,5 +28,10 @@ module.exports.sendToKindle = async (title, email) => {
     }
   });
   console.log(`email sent : ${JSON.stringify(info)}`)
-  return info.accepted;
+  if(info[0].statusMessage === 'Accepted'){
+    return true
+  }
+  else{
+    return false
+  }
 }

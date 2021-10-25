@@ -1,16 +1,17 @@
 const fs = require('fs');
 const path = require('path');
 const utils = require('util');
-const puppeteer = require('puppeteer');
+// const puppeteer = require('puppeteer');
+const puppeteer = require('puppeteer-extra');
+const AdblockerPlugin = require('puppeteer-extra-plugin-adblocker');
 const hb = require('handlebars');
 const readFile = utils.promisify(fs.readFile);
 const emailService = require('./email-service');
 const mercury = require('@postlight/mercury-parser');
 const { v4: uuidv4 } = require('uuid');
 
-//TODO: implement add blocker, decide if in memory html is enough (less file cleanup / storage), get new email
-// What is the best order if we are using the add blocker? Could we use mercury after add blocker or is before still best?
-// I think before still makes sense - parse with mercury - reform html - mount html - remove adds - generate pdf
+//TODO: add format (A5) & light/dark mode to request body & make notes for all security & cloud plan
+
 
 module.exports.createPdfFromUrl = async (url, email) => {
     let result = await parseHtml(url);
@@ -43,6 +44,7 @@ const generatePdf = async (title, fileId, email) => {
         const result = template(data);
         const html = result;
 
+        puppeteer.use(AdblockerPlugin());
         const browser = await puppeteer.launch();
         const page = await browser.newPage();
         await page.setContent(html);
@@ -50,7 +52,6 @@ const generatePdf = async (title, fileId, email) => {
         await browser.close();
         console.log("PDF generated")
 
-        //TODO: move this to main function - right now it is not waiting for PDF if moved....
         let results = await emailService.sendToKindle(title, email);
         if(!results){
             console.log('email was not sent')
@@ -70,8 +71,15 @@ const parseHtml = async (url) => {
 const buildHtml = (title, body, date, domain) => {
     let datePublished = date ? date : '';
     let domainName = domain ? domain : '';
+    let someCSS = `
+    <style>
+    body {
+        color: red;
+    }
+    </style>
+    `;
     return '<!DOCTYPE html>'
-        + '<html><head>' + domainName + '</head><h1>' + title + '</h1><h5>' + datePublished + '</h5><body>' + body + '</body></html>';
+        + '<html><head>' + domainName + someCSS + '</head><h1>' + title + '</h1><h5>' + datePublished + '</h5><body>' + body + '</body></html>';
 };
 
 const removeFiles = (title, fileId) => {
