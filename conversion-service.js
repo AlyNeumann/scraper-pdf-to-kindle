@@ -13,7 +13,6 @@ const validationService = require('./validation-service');
 //TODO: add format (A5) & light/dark mode to request body & make notes for all security & cloud plan
 // Need error object! 
 
-
 module.exports.createPdfFromUrl = async (url, email) => {
     let isValidData = await validationService.isValidData(url, email)
     if(!isValidData){
