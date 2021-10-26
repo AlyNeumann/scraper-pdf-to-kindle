@@ -1,7 +1,6 @@
 const fs = require('fs');
 const path = require('path');
 const utils = require('util');
-// const puppeteer = require('puppeteer');
 const puppeteer = require('puppeteer-extra');
 const AdblockerPlugin = require('puppeteer-extra-plugin-adblocker');
 const hb = require('handlebars');
@@ -9,11 +8,18 @@ const readFile = utils.promisify(fs.readFile);
 const emailService = require('./email-service');
 const mercury = require('@postlight/mercury-parser');
 const { v4: uuidv4 } = require('uuid');
+const validationService = require('./validation-service');
 
 //TODO: add format (A5) & light/dark mode to request body & make notes for all security & cloud plan
+// Need error object! 
 
 
 module.exports.createPdfFromUrl = async (url, email) => {
+    let isValidData = await validationService.isValidData(url, email)
+    if(!isValidData){
+        return "invalid data"
+    }
+
     let result = await parseHtml(url);
 
     let html = buildHtml(result.title, result.content, result.date_published, result.domain)
